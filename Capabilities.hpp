@@ -7,44 +7,54 @@ public:
 
     class CPUCapabilitiesInternal;
 
-    static constexpr __forceinline const bool hasAVX(void) noexcept
-    {
-        return CPUCapabilitiesHandler.m_bs1ECX[SE_28];
-    }
-
-    static constexpr __forceinline const bool hasAVX2(void) noexcept
-    {
-        return CPUCapabilitiesHandler.m_bs7EBX[SE_5];
-    }
+public:
 
     static const CPUCapabilitiesInternal CPUCapabilitiesHandler;
+
+public:
+
+    static constexpr __forceinline const bool hasAVX(void) const noexcept
+    {
+        return CPUCapabilitiesHandler.m_bsAvx[SE_28];
+    }
+
+    static constexpr __forceinline const bool hasAVX2(void) const noexcept
+    {
+        return CPUCapabilitiesHandler.m_bsAvx2[SE_5];
+    }
+
+public:
 
     class CPUCapabilitiesInternal
     {
     public:
 
         __forceinline const CPUCapabilitiesInternal(void) noexcept : \
-            m_nIDs{ SE_0, }, m_nIter{ SE_0, }, m_bs1ECX{ SE_0, }, m_bs7EBX{ SE_0, }, m_vecCPUData{ }, m_arrCPUInfo{ }
+            m_nSize{ SE_0, }, m_nIter{ SE_0, }, m_bsAvx{ SE_0, }, m_bsAvx2{ SE_0, }, m_vecData{ }, m_arrInfo{ }
         {
-            ::__cpuid(m_arrCPUInfo.data(), SE_0), m_nIDs = m_arrCPUInfo[SE_0];
+            ::__cpuid(m_arrInfo.data(), SE_0), m_nSize = m_arrInfo[SE_0];
 
-            for (m_nIter = SE_0; m_nIter < (m_nIDs + SE_1); m_nIter = (m_nIter + SE_1))
-                ::__cpuidex(m_arrCPUInfo.data(), m_nIter, SE_0), m_vecCPUData.emplace_back(m_arrCPUInfo);
+            for (m_nIter = SE_0; m_nIter < (m_nSize + SE_1); m_nIter = (m_nIter + SE_1))
+                ::__cpuidex(m_arrInfo.data(), m_nIter, SE_0), m_vecData.emplace_back(m_arrInfo);
 
-            if (m_nIDs > SE_0)
-                m_bs1ECX = m_vecCPUData[SE_1][SE_2];
+            if (m_nSize > SE_0)
+            {
+                m_bsAvx = m_vecData[SE_1][SE_2];
 
-            if (m_nIDs > SE_6)
-                m_bs7EBX = m_vecCPUData[SE_7][SE_1];
+                if (m_nSize > SE_6)
+                    m_bsAvx2 = m_vecData[SE_7][SE_1];
+            }
         }
 
-        int m_nIDs{ SE_0, }, m_nIter{ SE_0, };
+public:
 
-        ::std::bitset < 32 > m_bs1ECX{ SE_0, }, m_bs7EBX{ SE_0, };
+        int m_nSize{ SE_0, }, m_nIter{ SE_0, };
 
-        ::std::vector < ::std::array < int, 4 > > m_vecCPUData{ };
+        ::std::bitset < 32 > m_bsAvx{ SE_0, }, m_bsAvx2{ SE_0, };
 
-        ::std::array < int, 4 > m_arrCPUInfo{ };
+        ::std::vector < ::std::array < int, 4 > > m_vecData{ };
+
+        ::std::array < int, 4 > m_arrInfo{ };
     };
 };
 
