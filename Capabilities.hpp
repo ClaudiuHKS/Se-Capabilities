@@ -13,12 +13,12 @@ public:
 
 public:
 
-    static constexpr __forceinline const bool hasAVX(void) const noexcept
+    static constexpr __forceinline const bool hasAVX(void) noexcept
     {
         return CPUCapabilitiesHandler.m_bsAvx[SE_28];
     }
 
-    static constexpr __forceinline const bool hasAVX2(void) const noexcept
+    static constexpr __forceinline const bool hasAVX2(void) noexcept
     {
         return CPUCapabilitiesHandler.m_bsAvx2[SE_5];
     }
