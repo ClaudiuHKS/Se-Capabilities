@@ -46,7 +46,7 @@ public:
             }
         }
 
-public:
+    public:
 
         int m_nSize{ SE_0, }, m_nIter{ SE_0, };
 
