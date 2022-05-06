@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "Requirements.HPP"
+
 class CPUCapabilities
 {
 public:
@@ -29,8 +31,8 @@ public:
     {
     public:
 
-        __forceinline const CPUCapabilitiesInternal ( void ) noexcept : \
-            m_nSize { SE_0, }, m_nIter { SE_0, }, m_bsAvx { SE_0, }, m_bsAvx2 { SE_0, }, m_vecData { }, m_arrInfo { }
+        constexpr __forceinline const CPUCapabilitiesInternal ( void ) noexcept : m_nSize { SE_0, }, m_nIter { SE_0, }, m_bsAvx { SE_0, },
+            m_bsAvx2 { SE_0, }, m_vecData { }, m_arrInfo { }
         {
             ::__cpuid ( m_arrInfo.data ( ), SE_0 ), m_nSize = m_arrInfo [ SE_0 ];
 
