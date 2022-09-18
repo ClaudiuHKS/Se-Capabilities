@@ -3,61 +3,12 @@
 
 #include "Requirements.HPP"
 
-class CPUCapabilities
-{
-public:
-
-    class CPUCapabilitiesInternal;
-
-public:
-
-    static const CPUCapabilitiesInternal CPUCapabilitiesHandler;
-
-public:
-
-    static constexpr __forceinline const bool hasAVX ( void ) noexcept
-    {
-        return CPUCapabilitiesHandler.m_bsAvx [ SE_28 ];
-    }
-
-    static constexpr __forceinline const bool hasAVX2 ( void ) noexcept
-    {
-        return CPUCapabilitiesHandler.m_bsAvx2 [ SE_5 ];
-    }
-
-public:
-
-    class CPUCapabilitiesInternal
-    {
-    public:
-
-        __forceinline const CPUCapabilitiesInternal ( void ) noexcept : m_nSize { SE_0, }, m_nIter { SE_0, }, m_bsAvx { SE_0, },
-            m_bsAvx2 { SE_0, }, m_vecData { }, m_arrInfo { }
-        {
-            ::__cpuid ( m_arrInfo.data ( ), SE_0 ), m_nSize = m_arrInfo [ SE_0 ];
-
-            for ( m_nIter = SE_0; m_nIter < ( m_nSize + SE_1 ); m_nIter = ( m_nIter + SE_1 ) )
-                ::__cpuidex ( m_arrInfo.data ( ), m_nIter, SE_0 ), m_vecData.emplace_back ( m_arrInfo );
-
-            if ( m_nSize > SE_0 )
-            {
-                m_bsAvx = m_vecData [ SE_1 ][ SE_2 ];
-
-                if ( m_nSize > SE_6 )
-                    m_bsAvx2 = m_vecData [ SE_7 ][ SE_1 ];
-            }
-        }
-
-    public:
-
-        int m_nSize { SE_0, }, m_nIter { SE_0, };
-
-        ::std::bitset < 32 > m_bsAvx { SE_0, }, m_bsAvx2 { SE_0, };
-
-        ::std::vector < ::std::array < int, 4 > > m_vecData { };
-
-        ::std::array < int, 4 > m_arrInfo { };
-    };
-};
-
-const ::CPUCapabilities::CPUCapabilitiesInternal CPUCapabilities::CPUCapabilitiesHandler { };
+static int cpuCaps() noexcept {
+	int Size{ SE_0, }, Iter{ SE_0, }; ::std::bitset < 32 > Avx1{ }, Avx2{ };
+	::std::vector < ::std::array < int, 4 > > Data{ }; ::std::array < int, 4 > Info{ };
+	::__cpuid(Info.data(), SE_0), Size = Info[SE_0];
+	for (Iter = SE_0; Iter < (Size + SE_1); Iter = (Iter + SE_1)) ::__cpuidex(Info.data(), Iter, SE_0), Data.emplace_back(Info);
+	if (Size > SE_0) {
+		Avx1 = Data[SE_1][SE_2]; if (Size > SE_6) Avx2 = Data[SE_7][SE_1];
+	} return Avx2[SE_5] ? SE_2 : (Avx1[SE_28] ? SE_1 : SE_0);
+}
